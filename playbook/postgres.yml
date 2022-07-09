@@ -1,0 +1,6 @@
+---
+- hosts: all
+  name: Postgres installation
+  become: yes
+  roles:
+    - ../roles/postgres

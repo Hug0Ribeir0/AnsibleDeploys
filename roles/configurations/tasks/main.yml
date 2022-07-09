@@ -1,4 +1,18 @@
 - name: Install Python
   yum:
-    name: python3.8
+    name: python3.9
   become: yes
+
+- name: Install OpenJDK
+  yum:
+    name: java-latest-openjdk.x86_64
+  become: yes
+
+- name: Install JavaSE
+  yum:
+    name: java-latest-openjdk.x86_64
+  become: yes
+
+- name: Java version
+  shell: "java --version"
+

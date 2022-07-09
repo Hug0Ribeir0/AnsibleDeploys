@@ -1,0 +1,55 @@
+- name: Add PostgreSQL Yum Repository
+  dnf: 
+    name: 
+      - https://download.postgresql.org/pub/repos/yum/reporpms/F-35-x86_64/pgdg-fedora-repo-latest.noarch.rpm
+      - postgresql11-server
+      - postgresql11
+  become: yes
+
+#- name: Install Postgres Server
+#  dnf: 
+#    name: postgresql11-server
+#  become: yes
+
+#- name: Install Postgres Client
+#  dnf: postgresql11
+
+- name: Initialize Postgres database
+  shell: "{{item}}"
+  with_items:
+    - "/usr/pgsql-11/bin/postgresql-11-setup initdb"
+    - "systemctl start postgresql-11"
+    - "systemctl enable postgresql-11"
+
+
+- include: firewall.yml
+  when: install_firewall
+
+##Create Database
+- name: Create Postgres DB
+  postgresql_db:
+    name: '{{postgres_db}}'
+    encoding: '{{db_encoding}}'
+    login_host: '{{db_host}}'
+
+##Create User
+- name: Create Postgres User
+  postgresql_user:
+    db: '{{postgres_db}}'
+    name: '{{postgres_username}}'
+    password: '{{postgres_user_pwd}}'
+    priv: 'ALL'
+    login_host: '{{db_host}}'
+
+##Create Schema
+- name: Create Postgres Schema
+  postgresql_schema:
+    db: '{{postgres_db}}'
+    name: '{{postgres_schema_name}}'
+    owner: '{{postgres_username}}'
+    login_host: '{{db_host}}'
+
+
+
+
+

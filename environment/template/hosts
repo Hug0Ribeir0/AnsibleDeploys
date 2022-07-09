@@ -1,7 +1,7 @@
 [host1]
-0.0.0.0
+192.168.1.100
 
 [host1:vars]
-ansible_user=user
-ansible_ssh_private_key_file=
+ansible_user=hribeiro
+ansible_ssh_pass=hugoribeiro918
 
