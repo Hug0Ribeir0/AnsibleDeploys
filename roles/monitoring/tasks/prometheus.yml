@@ -1,0 +1,31 @@
+- name: Creating Prometheus Directory
+  file:
+    path: {{ prometheus_directory }}
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Get Prometheus
+  get_url: https://github.com/prometheus/prometheus/releases/download/v2.37.0/prometheus-2.37.0.linux-amd64.tar.gz
+  dest: {{prometheus_directory}}
+  become: yes
+
+- name: Open tar file
+  shell: 'cd {{prometheus_directory}}; tar xf prometheus-2.37.0.linux-amd64.tar.gz prometheus_installation'
+  become: yes
+
+- name: Create Symbolic Link
+  file:
+    src: {{prometheus_directory}}/prometheus_installation/prometheus
+    dest: {{prometheus_directory}}/prometheus
+    state: link
+
+- name: Copy prometheus basic config file
+  ansible.builtin.copy:
+    src: Config_Files/prometheus_config.yml
+    dest: {{prometheus_directory}}
+    mode: '0644'
+
+- name: Starting prometheus
+  shell: 'prometheus/prometheus --web.listen-address=127.0.0.1:9090 --config.file={{prometheus_directory}}/prometheus.yml'
+  become: yes

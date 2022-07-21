@@ -1,0 +1,8 @@
+---
+- hosts: all
+  name: Prometheus installation
+  become: yes
+  roles:
+    - ../roles/monitoring
+  vars:
+    to_install: 'prometheus'
